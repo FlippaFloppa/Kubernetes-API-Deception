@@ -3,9 +3,6 @@ package it.unibo.openapi.endpoints;
 import it.unibo.openapi.model.User;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-
-import java.time.LocalDate;
-import java.util.Base64;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -16,7 +13,7 @@ import static java.util.Collections.*;
 @Path("/users")
 public class UserResource {
 
-    private Set<User> users = newSetFromMap(synchronizedMap(new LinkedHashMap<>()));
+    private final Set<User> users = newSetFromMap(synchronizedMap(new LinkedHashMap<>()));
 
     public UserResource() {
         //TODO load users from file
