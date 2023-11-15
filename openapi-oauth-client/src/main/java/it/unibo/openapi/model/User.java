@@ -12,6 +12,8 @@ public class User {
     public String password;
     public Date registrationDate;
 
+    public User() {
+    }
     public User(String name, String surname, String username, String email, String password, Date registrationDate) {
         this.name = name;
         this.surname = surname;

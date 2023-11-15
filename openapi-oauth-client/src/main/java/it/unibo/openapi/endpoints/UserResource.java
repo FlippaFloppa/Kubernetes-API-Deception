@@ -5,6 +5,9 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.eclipse.microprofile.config.inject.ConfigProperties;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -12,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.*;
 
-@Path("/users")
+@Path( "/api/v2/users")
 public class UserResource {
 
     private final Set<User> users = newSetFromMap(synchronizedMap(new LinkedHashMap<>()));
@@ -47,7 +50,7 @@ public class UserResource {
 
     @GET
     @RolesAllowed({"Echoer", "Subscriber"})
-    @Path("/{username}")
+    @Path("{username}")
     public Set<User> getUsersByUsername(String username){
         return users.stream().filter(user -> user.username.equals(username)).collect(Collectors.toSet());
     }
