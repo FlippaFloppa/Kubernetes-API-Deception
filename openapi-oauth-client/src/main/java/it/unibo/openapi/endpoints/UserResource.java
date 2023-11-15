@@ -1,6 +1,8 @@
 package it.unibo.openapi.endpoints;
 
 import it.unibo.openapi.model.User;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import java.util.Date;
@@ -23,6 +25,7 @@ public class UserResource {
     }
 
     @GET
+    @PermitAll
     @Produces(MediaType.APPLICATION_JSON)
     public Set<User> listUsers(){
         return users;
@@ -43,6 +46,7 @@ public class UserResource {
     }
 
     @GET
+    @RolesAllowed({"Echoer", "Subscriber"})
     @Path("/{username}")
     public Set<User> getUsersByUsername(String username){
         return users.stream().filter(user -> user.username.equals(username)).collect(Collectors.toSet());
