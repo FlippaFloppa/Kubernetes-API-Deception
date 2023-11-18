@@ -4,6 +4,7 @@ import io.quarkus.runtime.util.HashUtil;
 import it.unibo.openapi.model.User;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.config.inject.ConfigProperties;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.*;
 
 @Path( "/api/v2/users")
+@ApplicationScoped
 public class UserResource {
 
     private final Set<User> users = newSetFromMap(synchronizedMap(new LinkedHashMap<>()));

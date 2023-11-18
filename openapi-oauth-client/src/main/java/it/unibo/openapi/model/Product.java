@@ -8,10 +8,10 @@ import java.util.Date;
 
 public class Product {
 
-    String productId;
-    String productName;
-    String description;
-    Float price;
+    public String productId;
+    public String productName;
+    public String description;
+    public Float price;
 
 
     public Product() {

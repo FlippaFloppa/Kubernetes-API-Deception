@@ -5,9 +5,9 @@ import java.util.Set;
 
 public class Order {
 
-    String orderId;
-    Map<String,Integer> products;
-    String username;
+    public String orderId;
+    public Map<String,Integer> products;
+    public String username;
 
     public Order() {
     }
