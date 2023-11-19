@@ -1,12 +1,6 @@
 package it.unibo.openapi.model;
 
-import io.quarkus.runtime.util.HashUtil;
-
-import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Date;
-
-public class Product {
+public class ProductDetail {
 
     public String productId;
     public String productName;
@@ -14,10 +8,10 @@ public class Product {
     public Float price;
 
 
-    public Product() {
+    public ProductDetail() {
     }
 
-    public Product(String id, String productName, String description, Float price) {
+    public ProductDetail(String id, String productName, String description, Float price) {
         this.productId = id;
         this.productName = productName;
         this.description = description;

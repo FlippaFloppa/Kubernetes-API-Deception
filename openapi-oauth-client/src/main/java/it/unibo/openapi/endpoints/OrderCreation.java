@@ -1,6 +1,8 @@
 package it.unibo.openapi.endpoints;
 
 import it.unibo.openapi.model.Order;
+import it.unibo.openapi.model.ProductDetail;
+import it.unibo.openapi.model.ProductOrder;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -51,17 +53,21 @@ public class OrderCreation {
     private Float getOrderTotalPrice(String orderId){
 
         Float res = 0.0F;
-        Set<Set<Float>> tmp = orders.stream().filter(order -> order.orderId.equals(orderId)).map(order -> {
-            return productCreation.getProducts().stream().filter(product -> order.products.containsKey(product.productId))
-                    .map(product -> product.price * order.products.get(product.productId)).collect(Collectors.toSet());
-        }).collect(Collectors.toSet());
 
-        for(Set<Float> entry:tmp){
-            for(Float value: entry){
-                res *= value;
-            }
+        Order order = getOrderById(orderId);
+
+        for(ProductOrder p: order.products){
+            res += getProductDetailById(p.productId).price * p.quantity;
         }
 
         return res;
+    }
+
+    private ProductDetail getProductDetailById(String id){
+        return productCreation.getProducts().stream().filter(productDetail -> productDetail.productId.equals(id)).limit(1).collect(Collectors.toList()).get(0);
+    }
+
+    private Order getOrderById(String id){
+        return orders.stream().filter(order -> order.orderId.equals(id)).limit(1).collect(Collectors.toList()).get(0);
     }
 }

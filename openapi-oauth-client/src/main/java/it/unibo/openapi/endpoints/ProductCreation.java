@@ -1,12 +1,11 @@
 package it.unibo.openapi.endpoints;
 
-import it.unibo.openapi.model.Product;
+import it.unibo.openapi.model.ProductDetail;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 import java.util.LinkedHashMap;
-import java.util.Objects;
 import java.util.Set;
 
 import static java.util.Collections.newSetFromMap;
@@ -16,32 +15,32 @@ import static java.util.Collections.synchronizedMap;
 @ApplicationScoped
 public class ProductCreation {
 
-    private final Set<Product> products = newSetFromMap(synchronizedMap(new LinkedHashMap<>()));
+    private final Set<ProductDetail> productDetails = newSetFromMap(synchronizedMap(new LinkedHashMap<>()));
 
     public ProductCreation(){
-        products.add(new Product("21322", "coca", "mi serve", 23.5F));
+        productDetails.add(new ProductDetail("21322", "coca", "mi serve", 23.5F));
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<Product> getProducts(){
-        return products;
+    public Set<ProductDetail> getProducts(){
+        return productDetails;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<Product> addProduct(Product product){
-        return products;
+    public Set<ProductDetail> addProduct(ProductDetail productDetail){
+        return productDetails;
     }
 
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<Product> removeProduct(String productId){
+    public Set<ProductDetail> removeProduct(String productId){
 
-        products.removeIf(product -> product.productId.equals(productId));
+        productDetails.removeIf(productDetail -> productDetail.productId.equals(productId));
 
-        return products;
+        return productDetails;
     }
 }
