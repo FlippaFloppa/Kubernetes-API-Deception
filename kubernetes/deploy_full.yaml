@@ -43,6 +43,24 @@ spec:
         configMap:
           name: nginx-config
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: oauth-quarkus
+  name: oauth-quarkus
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: oauth-quarkus
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -89,24 +107,6 @@ spec:
         - containerPort: 8080
         resources: {}
 status: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  creationTimestamp: null
-  labels:
-    app: oauth-quarkus
-  name: oauth-quarkus
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    app: oauth-quarkus
-  type: LoadBalancer
-status:
-  loadBalancer: {}
 ---
 apiVersion: batch/v1
 kind: Job

@@ -35,7 +35,7 @@ spec:
           args: ["start-dev"]
           env:
             - name: KC_HOSTNAME_URL
-              value: "http://192.168.1.115:8080"
+              value: "http://keycloak"
             - name: KEYCLOAK_ADMIN
               value: "admin"
             - name: KEYCLOAK_ADMIN_PASSWORD
@@ -43,7 +43,7 @@ spec:
             - name: KC_DB
               value: "postgres"
             - name: KC_DB_URL
-              value: "jdbc:postgresql://192.168.1.115:5432/keycloakDB"
+              value: "jdbc:postgresql://postgres/keycloakDB"
             - name: KC_DB_USERNAME
               value: "keycloak"
             - name: KC_DB_PASSWORD

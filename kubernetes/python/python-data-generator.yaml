@@ -1,35 +1,51 @@
 apiVersion: batch/v1
-kind: CronJob
+kind: Job
 metadata:
-  creationTimestamp: null
   name: python-data-generator
 spec:
-  jobTemplate:
-    metadata:
-      creationTimestamp: null
-      name: python-data-generator
+  completions: 3
+  parallelism: 3
+  template:
     spec:
-      completions: 5
-      parallelism: 2
-      template:
-        metadata:
-          creationTimestamp: null
-        spec:
-          containers:
-            - image: docker.io/unibo-cybersec/python-data-generator:v1
-              name: python-data-generator
-              env:
-                - name: API_SERVER_URL
-                  valueFrom:
-                    configMapKeyRef:
-                      name: api-config
-                      key: API_SERVER_FULL
-                - name: WORDLIST_PATH
-                  valueFrom:
-                    configMapKeyRef:
-                      name: api-config
-                      key: WORDLIST_PATH
-              resources: {}
-          restartPolicy: OnFailure
-  schedule: '*/1 * * * *'
-status: {}
+      activeDeadlineSeconds: 5
+      containers:
+      - name: python-data-generator
+        env:
+          - name: API_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: API_SERVER_FULL
+          - name: WORDLIST_PATH
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: WORDLIST_PATH
+          - name: AUTH_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: AUTH_SERVER_URL
+          - name: CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: CLIENT_ID
+          - name: CLIENT_SECRET
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: CLIENT_SECRET
+          - name: USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: USERNAME
+          - name: PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: PASSWORD
+        image: docker.io/unibo-cybersec/python-data-generator:v1
+      restartPolicy: Never
+  backoffLimit: 4
