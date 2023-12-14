@@ -1,0 +1,227 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-deployment
+  name: nginx-deployment
+spec:
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx-deployment
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  template:
+    metadata:
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+      - name: nginx-deployment
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-index-config
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: nginx-index-config
+        configMap:
+          name: nginx-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: oauth-quarkus
+  name: oauth-quarkus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauth-quarkus
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: oauth-quarkus
+    spec:
+      containers:
+      - image: docker.io/unibo-cybersec/openapi-oauth-client:v1
+        name: openapi-oauth-client
+        env:
+        - name: QUARKUS_OIDC_AUTH_SERVER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: QUARKUS_OIDC_AUTH_SERVER_URL
+        - name: QUARKUS_OIDC_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: CLIENT_ID
+        - name: QUARKUS_OIDC_CREDENTIALS_SECRET
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: CLIENT_SECRET
+        - name: QUARKUS_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: QUARKUS_LOG_LEVEL
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: oauth-quarkus
+  name: oauth-quarkus
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: oauth-quarkus
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python-data-generator
+spec:
+  completions: 3
+  parallelism: 3
+  template:
+    spec:
+      activeDeadlineSeconds: 5
+      containers:
+      - name: python-data-generator
+        env:
+          - name: API_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: API_SERVER_FULL
+          - name: WORDLIST_PATH
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: WORDLIST_PATH
+          - name: AUTH_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: AUTH_SERVER_URL
+          - name: CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: CLIENT_ID
+          - name: CLIENT_SECRET
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: CLIENT_SECRET
+          - name: USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: USERNAME
+          - name: PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: PASSWORD
+
+        image: docker.io/unibo-cybersec/python-data-generator:v1
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: python-server-deception
+  name: python-server-deception
+spec:
+  ports:
+  - port: 1234
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: python-server-deception
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: python-server-deception
+  name: python-server-deception
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-server-deception
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: python-server-deception
+    spec:
+      containers:
+      - image: docker.io/unibo-cybersec/python-server-deception:v1
+        name: python-server-deception
+        env:
+        - name: API_SERVER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: API_SERVER_URL
+        - name: API_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: API_SERVER_PORT
+        - name: API_SERVER_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: API_SERVER_PATH
+        - name: CHAR_SPACE
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: CHAR_SPACE
+
+        resources: {}
+status: {}
