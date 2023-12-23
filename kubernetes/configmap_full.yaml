@@ -1,0 +1,20 @@
+apiVersion: v1
+data:
+  QUARKUS_API_SVC: "<API-SERVER>"
+  API_SERVER_PORT: "<PORT>"
+  API_SERVER_FULL: "http://<API-SERVER>/api/v2"
+  API_SERVER_URL: "http://<API-SERVER>"
+  API_SERVER_PATH: "/api/v2/<API>"
+  WORDLIST_PATH: "<WORDLIST-PATH>"
+  CHAR_SPACE: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  AUTH_SERVER_URL: "http://<OAUTH-SERVER>/realms/openapi-oauth/protocol/openid-connect/token"
+  CLIENT_ID: "<CLIENT-ID>"
+  CLIENT_SECRET: "<CLIENT-SECRET>"
+  USERNAME: "<USERNAME>"
+  PASSWORD: "<PASSWORD"
+  QUARKUS_OIDC_AUTH_SERVER_URL: "http://<OAUTH-SERVER>/realms/openapi-oauth"
+  QUARKUS_LOG_LEVEL: "DEBUG"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: api-config
