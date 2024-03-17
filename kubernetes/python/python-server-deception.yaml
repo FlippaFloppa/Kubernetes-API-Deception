@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: python-server-deception
+  name: python-server-deception
+spec:
+  ports:
+  - port: 1234
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: python-server-deception
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: python-server-deception
+  name: python-server-deception
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-server-deception
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: python-server-deception
+    spec:
+      containers:
+      - image: docker.io/unibo-cybersec/python-server-deception:v1
+        name: python-server-deception
+        env:
+        - name: API_SERVER_URL
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: API_SERVER_URL
+        - name: API_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: API_SERVER_PORT
+        - name: API_SERVER_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: API_SERVER_PATH
+        - name: CHAR_SPACE
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: CHAR_SPACE
+        resources: {}
+status: {}

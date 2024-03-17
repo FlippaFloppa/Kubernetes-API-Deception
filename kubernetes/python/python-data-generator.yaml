@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python-data-generator
+spec:
+  completions: 3
+  parallelism: 3
+  template:
+    spec:
+      activeDeadlineSeconds: 5
+      containers:
+      - name: python-data-generator
+        env:
+          - name: API_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: API_SERVER_FULL
+          - name: WORDLIST_PATH
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: WORDLIST_PATH
+          - name: AUTH_SERVER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: AUTH_SERVER_URL
+          - name: CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: CLIENT_ID
+          - name: CLIENT_SECRET
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: CLIENT_SECRET
+          - name: USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: USERNAME
+          - name: PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: api-config
+                key: PASSWORD
+        image: docker.io/unibo-cybersec/python-data-generator:v1
+      restartPolicy: Never
+  backoffLimit: 4
